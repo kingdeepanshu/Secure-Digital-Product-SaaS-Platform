@@ -142,7 +142,7 @@ for (let item of order.products) {
     expiresAt: Date.now() + 24 * 60 * 60 * 1000
   });
 
-  links += `<li><a href="http://localhost:5000/download/${token}">Download</a></li>`;
+  links += `<li><a href="http://${process.env.BASE_URL}/download/${token}">Download</a></li>`;
 }
 
 await sendEmail(
@@ -678,7 +678,7 @@ app.get("/my-docs", authMiddleware, async (req, res) => {
 
     result.push({
       title: product.title,
-      downloadLink: `http://localhost:5000/download/${t.token}`,
+      downloadLink: `http://${process.env.BASE_URL}/download/${t.token}`,
     });
   }
 
