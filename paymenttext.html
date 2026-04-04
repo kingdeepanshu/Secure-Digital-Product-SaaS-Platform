@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Payment</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<h2>Test Payment ₹1</h2>
+
+<button id="payBtn" onclick="payNow()">Pay Now</button>
+
+<script>
+async function payNow() {
+  try {
+    // 🔥 STEP 1: Call backend to create order
+    const res = await fetch("https://gael-meteoric-photochemically.ngrok-free.dev/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDBjYTE5OTJkNDc4M2Y0NDdmYmMwNyIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc1MjkxMDAzLCJleHAiOjE3NzU4OTU4MDN9.8xO2NcjG9mEbIMAruSJXDFRY_vknbhRCGimF13GSH54" // 🔥 paste your token
+      }
+    });
+
+    const data = await res.json();
+
+    console.log("Order:", data);
+
+    // 🔥 STEP 2: Razorpay options
+    var options = {
+      key: "rzp_test_SXUU1dfFg5JCRk", // 🔥 paste key_id
+      amount: data.amount * 100,
+      currency: "INR",
+      name: "Dev SaaS",
+      description: "Test Payment",
+      order_id: data.orderId,
+
+      handler: function (response) {
+        console.log("Payment Success:", response);
+        alert("Payment Success 🎉");
+      },
+
+      prefill: {
+        name: "Dev",
+        email: "king.obscura24@gmail.com"
+      },
+
+      theme: {
+        color: "#3399cc"
+      }
+    };
+
+    // 🔥 STEP 3: Open Razorpay popup
+    var rzp = new Razorpay(options);
+    rzp.open();
+
+    document.getElementById("payBtn").disabled = true;
+
+  } catch (err) {
+    console.error(err);
+    alert("Error");
+  }
+}
+</script>
+
+</body>
+</html>
