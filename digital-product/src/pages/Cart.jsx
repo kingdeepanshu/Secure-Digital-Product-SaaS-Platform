@@ -22,7 +22,7 @@ export default function Cart() {
     const res = await API.post("/create-order");
 
     const options = {
-      key: "YOUR_KEY",
+      key: "rzp_test_SXUU1dfFg5JCRk",
       amount: res.data.amount,
       currency: "INR",
       order_id: res.data.orderId,
