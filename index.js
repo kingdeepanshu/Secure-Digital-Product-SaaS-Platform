@@ -465,6 +465,12 @@ app.post("/cart", authMiddleware, async (req, res) => {
   const { productId } = req.body;
   console.log("Product ID:", productId);
 
+  const product = await Product.findById(productId);
+  if (!product) {
+    console.log("❌ Product not found");
+    return res.status(404).send("Product not found");
+  }
+
   let cart = await Cart.findOne({ userId: req.user.id });
 
   if (!cart) {
@@ -472,7 +478,7 @@ app.post("/cart", authMiddleware, async (req, res) => {
 
     cart = await Cart.create({
       userId: req.user.id,
-      items: [{ productId, quantity: 1 }],
+      items: [{ productId, product, quantity: 1 }],
     });
   } else {
     console.log("➕ Updating cart");
@@ -502,6 +508,36 @@ app.get("/cart", authMiddleware, async (req, res) => {
   }
 
   res.json(cart);
+});
+
+// ADD THIS BELOW YOUR /cart ROUTES
+
+app.post("/cart/remove", authMiddleware, async (req, res) => {
+  try {
+    const { productId } = req.body;
+
+    if (!productId) {
+      return res.status(400).send("Product ID required");
+    }
+
+    const cart = await Cart.findOne({ userId: req.user.id });
+
+    if (!cart) {
+      return res.status(404).send("Cart not found");
+    }
+
+    // remove product from cart
+    cart.items = cart.items.filter(
+      (item) => item.productId.toString() !== productId
+    );
+
+    await cart.save();
+
+    res.send("Product removed from cart");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error removing product");
+  }
 });
 
 /* ==============================
@@ -687,6 +723,7 @@ app.get("/my-docs", authMiddleware, async (req, res) => {
     const product = await Product.findById(t.productId);
 
     result.push({
+      id: product._id,
       title: product.title,
       downloadLink: `${process.env.BASE_URL}/download/${t.token}`,
     });
