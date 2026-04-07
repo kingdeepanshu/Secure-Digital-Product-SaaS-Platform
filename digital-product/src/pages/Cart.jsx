@@ -5,8 +5,18 @@ export default function Cart() {
   const [cart, setCart] = useState(null);
 
   useEffect(() => {
-    API.get("/cart").then((res) => setCart(res.data));
-  }, []);
+  API.get("/cart")
+    .then((res) => {
+      console.log("CART DATA:", res.data); // debug
+      setCart(res.data);
+    })
+    .catch((err) => {
+      console.log("ERROR:", err.response?.data);
+    });
+}, []);
+
+  console.log(cart);
+  
 
   const checkout = async () => {
     const res = await API.post("/create-order");

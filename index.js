@@ -494,6 +494,16 @@ app.post("/cart", authMiddleware, async (req, res) => {
   res.send("Added to cart");
 });
 
+app.get("/cart", authMiddleware, async (req, res) => {
+  const cart = await Cart.findOne({ userId: req.user.id });
+
+  if (!cart) {
+    return res.json({ items: [] });
+  }
+
+  res.json(cart);
+});
+
 /* ==============================
    💳 RAZORPAY SETUP
 ============================== */
