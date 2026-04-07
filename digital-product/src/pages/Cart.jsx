@@ -67,6 +67,9 @@ export default function Cart() {
       .catch(() => setLoading(false));
   }, []);
 
+  console.log(cart);
+  
+
   const checkout = async () => {
     const res = await API.post("/create-order");
 

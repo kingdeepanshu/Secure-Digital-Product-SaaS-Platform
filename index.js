@@ -465,12 +465,6 @@ app.post("/cart", authMiddleware, async (req, res) => {
   const { productId } = req.body;
   console.log("Product ID:", productId);
 
-  const product = await Product.findById(productId);
-  if (!product) {
-    console.log("❌ Product not found");
-    return res.status(404).send("Product not found");
-  }
-
   let cart = await Cart.findOne({ userId: req.user.id });
 
   if (!cart) {
@@ -478,7 +472,7 @@ app.post("/cart", authMiddleware, async (req, res) => {
 
     cart = await Cart.create({
       userId: req.user.id,
-      items: [{ productId, product, quantity: 1 }],
+      items: [{ productId, quantity: 1 }],
     });
   } else {
     console.log("➕ Updating cart");
@@ -501,8 +495,9 @@ app.post("/cart", authMiddleware, async (req, res) => {
 });
 
 app.get("/cart", authMiddleware, async (req, res) => {
-  const cart = await Cart.findOne({ userId: req.user.id });
-
+  const cart = await Cart.findOne({ userId: req.user.id })
+  .populate("items.productId");
+  
   if (!cart) {
     return res.json({ items: [] });
   }
