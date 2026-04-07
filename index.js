@@ -345,7 +345,7 @@ app.post("/register", async (req, res) => {
   });
   console.log("verification mail sent");
 
-  const link = `https://${process.env.BASE_URL}/verify-email?token=${token}`;
+  const link = `${process.env.BASE_URL}/verify-email?token=${token}`;
 
   await sendEmail(email, "Verify Email", `<a href="${link}">Verify</a>`);
 
