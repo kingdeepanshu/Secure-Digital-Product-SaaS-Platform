@@ -236,11 +236,20 @@ const Product = mongoose.model("Product", productSchema);
 
 // 🛒 CART
 const cartSchema = new mongoose.Schema({
-  userId: String,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   items: [
     {
-      productId: String,
-      quantity: Number,
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product", // 🔥 MOST IMPORTANT
+      },
+      quantity: {
+        type: Number,
+        default: 1,
+      },
     },
   ],
 });
@@ -487,7 +496,7 @@ app.post("/cart", authMiddleware, async (req, res) => {
       cart.items.push({ productId, quantity: 1 });
     }
     await cart.save();
-  }
+  } 
 
   console.log("🛒 Final Cart:", cart);
 
@@ -496,8 +505,11 @@ app.post("/cart", authMiddleware, async (req, res) => {
 
 app.get("/cart", authMiddleware, async (req, res) => {
   const cart = await Cart.findOne({ userId: req.user.id })
-  .populate("items.productId");
-  
+    .populate({
+      path: "items.productId",
+      select: "title price", // optional optimization
+    });
+
   if (!cart) {
     return res.json({ items: [] });
   }
