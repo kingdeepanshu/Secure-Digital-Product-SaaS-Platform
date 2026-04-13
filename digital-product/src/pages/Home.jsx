@@ -46,7 +46,7 @@ export default function Home() {
     API.get("/my-docs").then((res) => {
       const map = {};
       res.data.forEach((d) => {
-        map[d.productId || d._id] = true;
+        map[d.id] = true; // 🔥 FIX
       });
       setPurchased(map);
     });
@@ -54,7 +54,7 @@ export default function Home() {
     API.get("/cart").then((res) => {
       const map = {};
       res.data.items.forEach((item) => {
-        map[item.productId] = true;
+        map[item.productId._id] = true; // 🔥 FIX
       });
       setCart(map);
     });
@@ -81,6 +81,7 @@ export default function Home() {
       <div style={styles.grid}>
         {products.map((p) => {
           const isPurchased = purchased[p._id];
+          const isInCart = cart[p._id];
 
           return (
             <div key={p._id} style={styles.card}>
@@ -95,7 +96,7 @@ export default function Home() {
                   cursor: isPurchased ? "not-allowed" : "pointer",
                   background: isPurchased
                     ? "#444"
-                    : cart[p._id]
+                    : isInCart
                     ? "linear-gradient(90deg, #ff4d4f, #ff7875)"
                     : "linear-gradient(90deg, #635bff, #00d4ff)",
                 }}
@@ -103,7 +104,7 @@ export default function Home() {
               >
                 {isPurchased
                   ? "Purchased ✅"
-                  : cart[p._id]
+                  : isInCart
                   ? "Remove ❌"
                   : "Add to Cart 🛒"}
               </button>
