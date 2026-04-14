@@ -484,6 +484,41 @@ app.get("/my-docs", authMiddleware, async (req, res) => {
   res.json(result);
 });
 
+// =====================
+// Admin Apis
+// =====================
+
+app.get("/admin/users", authMiddleware, adminMiddleware, async (req, res) => {
+  const users = await User.find().select("-password");
+  res.json(users);
+});
+
+app.get("/admin/revenue", authMiddleware, adminMiddleware, async (req, res) => {
+  const orders = await Order.find({ status: "PAID" });
+
+  let total = 0;
+  orders.forEach((o) => (total += o.totalAmount));
+
+  res.json({ totalRevenue: total });
+});
+
+app.get("/admin/orders", authMiddleware, adminMiddleware, async (req, res) => {
+  const orders = await Order.find();
+  res.json(orders);
+});
+
+app.get("/admin/stats", authMiddleware, adminMiddleware, async (req, res) => {
+  const users = await User.countDocuments();
+  const orders = await Order.countDocuments();
+  const paidOrders = await Order.countDocuments({ status: "PAID" });
+
+  res.json({
+    users,
+    orders,
+    paidOrders,
+  });
+});
+
 app.get("/", (req, res) => {
   res.send("its working");
 });
