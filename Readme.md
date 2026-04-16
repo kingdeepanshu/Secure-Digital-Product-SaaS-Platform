@@ -1,4 +1,4 @@
-# 🚀 AI-Powered Digital Product Backend
+# 🚀 Secure Digital Product SaaS Platform
 
 ## 📌 Overview
 
@@ -90,6 +90,10 @@ GET /admin/stats
 <img width="1231" height="830" alt="Screenshot 2026-04-14 223917" src="https://github.com/user-attachments/assets/1347b245-2fe8-403e-97df-59a429aa8c4e" />
 <img width="1243" height="755" alt="Screenshot 2026-04-14 230217" src="https://github.com/user-attachments/assets/5d7f3826-c2bc-40ec-87ca-27e8d33efe07" />
 <img width="1224" height="889" alt="Screenshot 2026-04-14 230233" src="https://github.com/user-attachments/assets/71670196-e4be-4a91-80b8-132e2aa64223" />
+
+---
+
+## Live Demo: https://secure-digital-product-saas-platform.onrender.com
 
 ---
 
